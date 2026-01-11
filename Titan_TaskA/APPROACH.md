@@ -1,95 +1,50 @@
 # Titan - Approach Document
 
-## Overview
-
-Titan is a **Literary Consistency Checker** that uses a RAG (Retrieval-Augmented Generation) pipeline to verify if character backstories are consistent with evidence from novels.
-
----
-
-## Architecture
-
-```
-┌─────────────────┐    ┌────────────────┐    ┌─────────────────┐    ┌────────────┐
-│   Novel Texts   │ →  │   Retriever    │ →  │   Classifier    │ →  │   Output   │
-│   (data/novels) │    │  (retriever.py)│    │ (classifier.py) │    │ results.csv│
-└─────────────────┘    └────────────────┘    └─────────────────┘    └────────────┘
-                               ↓
-                       ┌────────────────┐
-                       │ Causal Checker │
-                       │(causal_checker)│
-                       └────────────────┘
-```
+## 1. The Core Objective
+Task A is a Binary Classification problem.
+- **Input**: A pair of events (Context/Hypothesis) linked to a long novel.
+- **Goal**: Determine if the proposed "Past" causally and logically explains the observed "Future."
+- **Output**: A label (1 for Valid/Consistent, 0 for Invalid/Inconsistent) in `results.csv`.
 
 ---
 
-## 1. Retriever Strategy (`retriever.py`)
+## 2. The Technical Pipeline
+We treated Task A as a Long-Context Reasoning problem using a RAG (Retrieval-Augmented Generation) pipeline.
 
-### Character-Centric Retrieval
-- Extracts the main character name from the backstory
-- Prioritizes chunks that mention the character by name
-- Uses regex-based name extraction for reliability
+### Step A: Data Ingestion (`main.py` & `data/`)
+The system loads the challenge questions from `data/test.csv`. It loads the full text of the novels (e.g., *The Count of Monte Cristo*) from `data/novels/`. Since novels are too large to feed into an LLM entirely, they are processed for retrieval.
 
-### Temporal/Section-Based Chunking
-- Chunks novels into 1000-character segments with position tracking
-- Tags chunks as `early` (0-33%), `middle` (33-66%), or `late` (66-100%)
-- Ensures retrieval covers the full narrative arc
+### Step B: Context Retrieval (`retriever.py`)
+For each question, this module searches the novel for relevant text chunks using:
+- **Character-Centric Filtering**: Prioritizes chunks mentioning the main character.
+- **Semantic Search**: Uses `all-MiniLM-L6-v2` embeddings to find conceptually similar segments.
+- **Multi-Pass Retrieval**: Ensures coverage across early, middle, and late sections of the book.
 
-### Multi-Pass Retrieval
-- Retrieves proportional samples from each section (early/middle/late)
-- Guarantees context diversity across the novel
-- Uses sentence-transformer embeddings (`all-MiniLM-L6-v2`)
+**Output**: A concentrated set of evidence text snippets.
 
----
+### Step C: Causal Reasoning (`classifier.py`)
+This is the brain of the system. It constructs a dynamic prompt for the LLM (Large Language Model).
+- **Prompt Structure**: "Given this context from the book [Evidence], does [Event A] causally lead to [Event B]?"
+- **Model**: Local inference via **Ollama** (`gemma2:2b` or `llama3.2`) or **Claude 3.5 Sonnet** (via OpenRouter).
+- **Chain of Thought**: The model extracts claims, matches them to evidence, and detects contradictions.
 
-## 2. Classification Model (`classifier.py`)
+### Step D: Logical Verification (`causal_checker.py`)
+A post-processing validation step that ensures consistency:
+- **Temporal Check**: Verifies that dates/ages in the backstory don't chronologically contradict the evidence.
+- **Name Check**: Flags potential entity mismatches (e.g., "Brittany" vs "Britannia").
+- **Consistency Verification**: Adjusts confidence scores based on detected logical flaws.
 
-### Model
-- **Primary**: Local inference via **Ollama**
-- **Models Verified**: `llama3.2` (high performance) or `gemma2:2b` (efficient memory usage)
-- **Fallback**: Claude 3.5 Sonnet via OpenRouter API
-
-### Scoring Logic
-1. **EXTRACT**: Identify specific claims (names, dates, events, locations)
-2. **MATCH**: Find relevant evidence for each claim
-3. **DETECT CONTRADICTIONS**: Check for direct factual conflicts
-4. **CAUSAL CHECK**: Verify logical/temporal consistency
-5. **SCORE**: Assign confidence (0.0-1.0) and binary prediction
-
-
-### Output
-- `prediction`: 0 (inconsistent) or 1 (consistent)
-- `rationale`: Explanation of the decision
-- Silence in evidence does NOT mean contradiction
+### Step E: Submission Generation (`run.py` -> `results.csv`)
+The `run.py` script orchestrates the loop over all test cases, collects final decisions, and generates the `results.csv` submission file.
 
 ---
 
-## 3. Causal Consistency Logic (`causal_checker.py`)
-
-### Contradiction Detection
-- **Temporal Consistency**: Detects impossible year gaps (>50 years)
-- **Name Consistency**: Identifies near-match name variations (e.g., "Brittany" vs "Britannia")
-- **Claim Extraction**: Parses dates, ages, names, and locations using regex
-
-### Confidence Adjustment
-| Contradictions Found | Modifier | Result |
-|---------------------|----------|--------|
-| 3+ | -0.30 | Inconsistent |
-| 1-2 | -0.15 | Inconsistent |
-| 0 | +0.10 | Consistent |
+## 3. Summary for Report
+"We treated Task A as a Long-Context Reasoning problem. We implemented a pipeline that first retrieves relevant narrative segments associated with the hypothesis using semantic similarity. These segments are then fed into a Large Language Model (via `classifier.py`) which is prompted to evaluate logical consistency and causal flow. Finally, a `causal_checker` module validates the outputs to ensure chronological integrity before generating the final binary predictions."
 
 ---
 
-## 4. Pathway Integration
-
-Pathway is used for real-time vector indexing and retrieval in `main.py`:
-- `pw.io.fs.read` for ingesting novel files
-- `KNNIndex` for building the vector search index
-- `SentenceTransformerEmbedder` for embedding generation
-- Streaming pipeline with `pw.run()`
-
----
-
-## 5. Execution
+## 4. Execution
 
 ### Prerequisites
 1. Install [Ollama](https://ollama.com/)
@@ -102,21 +57,7 @@ Pathway is used for real-time vector indexing and retrieval in `main.py`:
 $env:USE_OLLAMA="true"
 $env:OLLAMA_MODEL="llama3.2"  # or "gemma2:2b"
 python run.py --input data/ --output results.csv
-
-# Option 2: Run with OpenRouter (Cloud)
-$env:USE_OLLAMA="false"
-$env:OPENROUTER_API_KEY="your-key"
-python run.py --input data/ --output results.csv
 ```
-
----
-
-## Dependencies
-- `pathway` - Real-time data processing
-- `openai` - OpenRouter API client
-- `sentence-transformers` - Text embeddings
-- `pandas` - Data manipulation
-- `python-dotenv` - Environment variables
 
 ---
 
