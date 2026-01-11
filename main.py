@@ -3,7 +3,7 @@ import os
 
 # --- CONFIGURATION ---
 APP_NAME = "track-a-pathway-claude"
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
 
 # Define the Cloud Environment
 image = (

@@ -16,7 +16,7 @@ import csv
 
 # Set default API key if not in environment
 if not os.environ.get("OPENROUTER_API_KEY"):
-    os.environ["OPENROUTER_API_KEY"] = "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"
+    os.environ["OPENROUTER_API_KEY"] = "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"
 
 import pandas as pd
 import numpy as np
