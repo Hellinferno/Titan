@@ -17,16 +17,17 @@ We treated Task A as a Long-Context Reasoning problem. We implemented a pipeline
 ```
 
 ## 3. Pathway Integration
-Pathway is used to orchestrate the vector indexing for scalable retrieval (server-side):
-- **Ingestion**: `pw.io.fs.read` monitors the library of novels.
-- **Indexing**: `KNNIndex` builds a real-time vector index using `SentenceTransformerEmbedder`.
-- **Querying**: The `main.py` pipeline queries this index to retrieve context for each new backstory hypothesis.
+Pathway is designed to orchestrate the vector indexing for scalable retrieval in our cloud deployment (`main.py`):
+- **Ingestion**: `pw.io.fs.read` monitors the library of novels in real-time.
+- **Indexing**: `KNNIndex` builds a live vector index using `SentenceTransformerEmbedder`.
+- **Querying**: The cloud pipeline queries this index to retrieve context. 
+*(Note: For the purpose of this hackathon submission's independent reproducibility, `run.py` provides a local, dependency-light version of this logic).*
 
-## 4. Causal Reasoning Justification
+## 4. Causal Reasoning & Validation
 We go beyond simple similarity matching by:
 - **Chain-of-Thought Prompting**: The LLM is explicitly instructed to "Extract Claims" -> "Match Evidence" -> "Detect Contradictions".
-- **Deterministic Causal Checks**: `causal_checker.py` performs rigorous logic checks on names (Levenstein distance) and timelines (date parsing).
-- **Rule-Based Overrides**: If the LLM finds consistency but the Causal Checker finds a temporal impossibility (>50 year gap), the system overrides the decision to "Inconsistent".
+- **Deterministic Causal Checks**: `causal_checker.py` performs rigorous logic checks on names (Levenstein distance) and timelines.
+- **Robustness**: `classifier.py` implements a **retry mechanism (N=3)** to ensure valid JSON output, and `run.py` includes **automatic sanitization** to strip newlines and strictly enforce the CSV schema.
 
 ## 5. Error Analysis
 - **Ambiguity**: Silence in the text is not a contradiction. Our prompt explicitly handles this ("Silence != Contradiction").

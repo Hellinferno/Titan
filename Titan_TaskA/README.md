@@ -7,9 +7,9 @@ Compliant with Track A requirements: Binary Classification, Causal Reasoning, an
 ---
 
 ## 📄 Submission Contents
-- **`run.py`**: Canonical local runner (Deterministic, Validated Output).
+- **`run.py`**: Canonical local runner. **Automatically enforces strict CSV formatting** (removes newlines, ensures binary output).
 - **`REPORT.md`**: Technical report covering methodology, causal logic, and error analysis.
-- **`classifier.py`**: Hardened scoring logic with retry mechanisms.
+- **`classifier.py`**: Hardened scoring logic with retry mechanisms (N=3) for deterministic results.
 - **`tests.py`**: Unit tests for schema and logic verification.
 - **`evaluate.py`**: Metrics calculation script.
 
@@ -17,8 +17,11 @@ Compliant with Track A requirements: Binary Classification, Causal Reasoning, an
 
 ## 🛠️ Quick Start (Local)
 
+**Note**: This local runner uses `numpy` and `sentence-transformers` for ease of judging. For the full Pathway-enabled pipeline (Cloud), see `main.py` in the root repository.
+
 ### Prerequisites
 - Python 3.9+
+
 - [Ollama](https://ollama.com/) (Required for local mode)
 - `pip install -r requirements.txt`
 
