@@ -1,139 +1,71 @@
 # 🚀 Titan - Literary Consistency Checker
+# Task A Submission
 
-A powerful AI-powered pipeline that verifies backstory consistency against novel evidence using **Claude 3.5 Sonnet** and **Pathway** for real-time data processing.
-
-## 📋 Overview
-
-This project is a hackathon submission for the **Track A - Pathway Challenge**. It uses a RAG (Retrieval-Augmented Generation) approach to determine if character backstories are consistent with evidence from novels.
-
-### How It Works
-
-1. **Ingestion & Chunking**: Reads novel text files and chunks them into 1000-character segments
-2. **Vector Indexing**: Creates embeddings using `all-MiniLM-L6-v2` sentence transformer
-3. **Semantic Search**: Retrieves the most relevant novel chunks for each backstory query
-4. **AI Judgment**: Uses Claude 3.5 Sonnet via OpenRouter to determine consistency
-5. **Output**: Generates a CSV with predictions (0 = contradiction, 1 = consistent) and rationales
-
-## 🛠️ Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **Pathway** | Real-time data processing & vector indexing |
-| **Modal** | Serverless cloud compute with GPU support |
-| **Claude 3.5 Sonnet** | AI reasoning via OpenRouter API |
-| **Sentence Transformers** | Text embeddings (`all-MiniLM-L6-v2`) |
-| **Pandas** | Data manipulation |
-
-## 📁 Project Structure
-
-```
-hackathon_project/
-├── main.py                      # Main pipeline script
-├── fix_results.py               # Post-processing utility
-├── submission_final.csv         # Final submission output
-├── submission_final_fixed.csv   # Cleaned submission
-└── data/
-    ├── novels/                  # Novel text files
-    ├── test.csv                 # Test data with backstories
-    └── train.csv                # Training data
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.9+
-- [Modal](https://modal.com/) account
-- OpenRouter API key
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Hellinferno/Titan-.git
-   cd Titan-
-   ```
-
-2. **Install Modal CLI**
-   ```bash
-   pip install modal
-   modal setup
-   ```
-
-3. **Set your API key** (environment variable):
-   
-   **PowerShell:**
-   ```powershell
-   $env:OPENROUTER_API_KEY = "your-api-key"
-   ```
-   
-   **Linux/Mac:**
-   ```bash
-   export OPENROUTER_API_KEY="your-api-key"
-   ```
-
-### Running the Pipeline
-
-**Local Runner (Recommended for judges):**
-```bash
-python run.py --input data/ --output results.csv
-```
-
-**Modal Cloud Runner (Optional):**
-```bash
-modal run main.py
-```
-
-This will:
-- Process all novels and test backstories
-- Generate `results.csv` with predictions
-
-## 📊 Output Format
-
-The output CSV contains:
-
-| Column | Description |
-|--------|-------------|
-| `StoryID` | Unique identifier for the backstory |
-| `Prediction` | `0` (contradiction) or `1` (consistent) |
-| `Rationale` | Brief explanation from Claude |
-
-## ⚙️ Configuration
-
-Key parameters in `main.py`:
-
-```python
-APP_NAME = "track-a-pathway-claude"  # Modal app name
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")  # Environment variable
-DATA_DIR = "/root/data/"             # Data directory in cloud
-```
-
-## 🧠 AI Prompt Design
-
-The AI judge uses a **Chain of Thought** prompt for comprehensive analysis:
-1. **IDENTIFY**: Specific details in evidence relating to the backstory
-2. **COMPARE**: Check for logical contradictions
-3. **DECIDE**: Determine consistency
-
-- Returns `0` if backstory **contradicts** novel evidence
-- Returns `1` if backstory is **supported by** or **silent** in the evidence
-- Provides comprehensive evidence rationale for each decision
-
-## 📈 Performance
-
-- **Model**: Claude 3.5 Sonnet (via OpenRouter)
-- **Embedding**: all-MiniLM-L6-v2 (384 dimensions)
-- **Chunk Size**: 1000 characters
-- **K-Nearest Neighbors**: k=5 for wider context retrieval
-
-## 🤝 Contributing
-
-Feel free to open issues or submit pull requests for improvements!
-
-## 📄 License
-
-MIT License - feel free to use this project for your own hackathons and learning.
+A strict, robust AI pipeline ensuring character consistency using **local LLMs (Ollama)** or **Claude 3.5**.
+Compliant with Track A requirements: Binary Classification, Causal Reasoning, and Pathway integration.
 
 ---
 
-**Built with ❤️ for the Pathway Hackathon**
+## 📄 Submission Contents
+- **`run.py`**: Canonical local runner (Deterministic, Validated Output).
+- **`REPORT.md`**: Technical report covering methodology, causal logic, and error analysis.
+- **`classifier.py`**: Hardened scoring logic with retry mechanisms.
+- **`tests.py`**: Unit tests for schema and logic verification.
+- **`evaluate.py`**: Metrics calculation script.
+
+---
+
+## 🛠️ Quick Start (Local)
+
+### Prerequisites
+- Python 3.9+
+- [Ollama](https://ollama.com/) (Required for local mode)
+- `pip install -r requirements.txt`
+
+### 1. Setup
+```bash
+# Pull the model (approx 2GB)
+ollama pull gemma2:2b
+# OR for better performance:
+ollama pull llama3.2
+```
+
+### 2. Run the Pipeline
+```bash
+# Set environment to use Ollama
+$env:USE_OLLAMA="true"
+$env:OLLAMA_MODEL="gemma2:2b" 
+
+# Execute
+python run.py --input data/ --output results.csv
+```
+
+### 3. Validation
+```bash
+# Run unit tests
+python tests.py
+
+# (Optional) Evaluate against ground truth
+python evaluate.py --pred results.csv --gold data/train.csv
+```
+
+---
+
+## 🧠 Approach Highlights
+
+1. **Deterministic Logic**: `classifier.py` enforces binary output (0/1) via strict parsing and retry loops.
+2. **Causal Checker**: `causal_checker.py` adds a layer of logic (Time/Name checks) beyond simple R/A.
+3. **Pathway**: Used in `main.py` for scalable vector indexing (cloud implementation).
+4. **Validation**: Output is programmatically validated for schema compliance (`StoryID,Prediction,Rationale`).
+
+(See `REPORT.md` for full details)
+
+---
+
+## ⚙️ Configuration
+- **OLLAMA_MODEL**: defaults to `llama3.2`
+- **OPENROUTER_API_KEY**: fallback if `USE_OLLAMA=false`
+
+---
+
+**Team Titan**

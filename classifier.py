@@ -91,60 +91,60 @@ Return ONLY valid JSON:
 {evidence}
 """
     
-    try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=500,  # More tokens for local model
-        )
-        
-        text = response.choices[0].message.content.strip()
-        text = text.replace("```json", "").replace("```", "").strip()
-        
-        # Try to extract JSON from the response
-        # Sometimes models add extra text before/after JSON
-        json_start = text.find("{")
-        json_end = text.rfind("}") + 1
-        if json_start != -1 and json_end > json_start:
-            text = text[json_start:json_end]
-        
-        data = json.loads(text)
-        confidence = float(data.get("confidence", 0.5))
-        prediction = int(data.get("prediction", 1 if confidence >= 0.5 else 0))
-        contradictions = data.get("contradictions", [])
-        rationale = data.get("rationale", "No rationale provided.")
-        
-        # Add contradiction info to rationale if found
-        if contradictions:
-            rationale = f"Contradictions: {'; '.join(contradictions)}. {rationale}"
-        
-        return {
-            "probability": confidence,
-            "prediction": prediction,
-            "rationale": rationale
-        }
-        
-    except json.JSONDecodeError as e:
-        # Try to extract prediction from raw text
-        text_lower = text.lower() if 'text' in dir() else ""
-        if "inconsistent" in text_lower or '"prediction": 0' in text_lower:
-            return {"probability": 0.3, "prediction": 0, "rationale": f"Parse error but detected inconsistency: {str(e)[:50]}"}
-        return {"probability": 0.5, "prediction": 1, "rationale": f"JSON parse error: {str(e)[:50]}"}
-        
-    except Exception as e:
-        # FALLBACK: Deterministic failure mode
-        # If we can't parse, check for strong "inconsistent" keywords again in raw text
-        # If still unsure, default to 0 (Conservative approach for consistency checking)
-        
-        # Try to recover text if available
-        raw_text = locals().get('text', '') or str(e)
-        
-        if "prediction" in raw_text.lower() and ": 0" in raw_text:
-             return {"probability": 0.2, "prediction": 0, "rationale": "Fallback parse: detected 0"}
-             
-        # Default to consistent (1) if silent, or 0 if we want to be strict?
-        # Task A often prefers 1 as default if no contradiction found.
-        return {"probability": 0.5, "prediction": 1, "rationale": f"Model Error: {str(e)[:50]}"}
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=500,
+            )
+            
+            text = response.choices[0].message.content.strip()
+            # Clean potential markdown
+            clean_text = text.replace("```json", "").replace("```", "").strip()
+            
+            # Extract JSON substring
+            json_start = clean_text.find("{")
+            json_end = clean_text.rfind("}") + 1
+            if json_start != -1 and json_end > json_start:
+                clean_text = clean_text[json_start:json_end]
+            
+            data = json.loads(clean_text)
+            
+            # Validate essential fields
+            confidence = float(data.get("confidence", 0.5))
+            prediction = int(data.get("prediction", 1 if confidence >= 0.5 else 0))
+            if prediction not in [0, 1]:
+                 raise ValueError("Prediction must be 0 or 1")
+                 
+            contradictions = data.get("contradictions", [])
+            rationale = data.get("rationale", "No rationale provided.")
+            
+            if contradictions:
+                rationale = f"Contradictions: {'; '.join(contradictions)}. {rationale}"
+            
+            return {
+                "probability": confidence,
+                "prediction": prediction,
+                "rationale": rationale
+            }
+            
+        except (json.JSONDecodeError, ValueError) as e:
+            if attempt < max_retries - 1:
+                time.sleep(1) # Wait before retry
+                continue
+            
+            # Fallback only on final failure
+            raw_text = locals().get('text', '')
+            if "prediction" in raw_text.lower() and ": 0" in raw_text:
+                 return {"probability": 0.2, "prediction": 0, "rationale": "Fallback: detected 0 after retries"}
+            
+            return {"probability": 0.5, "prediction": 1, "rationale": f"Model Error (Retried {max_retries}x): {str(e)[:50]}"}
+        except Exception as e:
+            # Non-parsing errors (e.g. API connection) - standard handling
+            return {"probability": 0.5, "prediction": 1, "rationale": f"System Error: {str(e)[:50]}"}
+
 
 
 
