@@ -8,18 +8,15 @@ import json
 import time
 from openai import OpenAI
 
-# LLM Configuration - Use Ollama by default, fallback to OpenRouter
-USE_OLLAMA = os.environ.get("USE_OLLAMA", "true").lower() == "true"
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-
+def _is_ollama_enabled():
+    return os.environ.get("USE_OLLAMA", "true").lower() == "true"
 
 def get_client():
     """Get LLM client - Ollama (local) or OpenRouter (cloud)."""
     import httpx
     http_client = httpx.Client(timeout=120.0)  # Longer timeout for local inference
     
-    if USE_OLLAMA:
+    if _is_ollama_enabled():
         # Use local Ollama server
         return OpenAI(
             base_url="http://localhost:11434/v1",
@@ -30,17 +27,18 @@ def get_client():
         # Use OpenRouter (cloud)
         return OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key=OPENROUTER_API_KEY,
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
             http_client=http_client,
         )
 
 
 def get_model_name():
     """Get the model name based on configuration."""
-    if USE_OLLAMA:
-        return OLLAMA_MODEL
+    if _is_ollama_enabled():
+        return os.environ.get("OLLAMA_MODEL", "llama3.2")
     else:
         return "anthropic/claude-3.5-sonnet"
+
 
 
 def score_backstory(backstory: str, evidence: str, client=None) -> dict:
@@ -134,7 +132,20 @@ Return ONLY valid JSON:
         return {"probability": 0.5, "prediction": 1, "rationale": f"JSON parse error: {str(e)[:50]}"}
         
     except Exception as e:
-        return {"probability": 0.5, "prediction": 1, "rationale": f"LLM error: {str(e)[:100]}"}
+        # FALLBACK: Deterministic failure mode
+        # If we can't parse, check for strong "inconsistent" keywords again in raw text
+        # If still unsure, default to 0 (Conservative approach for consistency checking)
+        
+        # Try to recover text if available
+        raw_text = locals().get('text', '') or str(e)
+        
+        if "prediction" in raw_text.lower() and ": 0" in raw_text:
+             return {"probability": 0.2, "prediction": 0, "rationale": "Fallback parse: detected 0"}
+             
+        # Default to consistent (1) if silent, or 0 if we want to be strict?
+        # Task A often prefers 1 as default if no contradiction found.
+        return {"probability": 0.5, "prediction": 1, "rationale": f"Model Error: {str(e)[:50]}"}
+
 
 
 def batch_score(backstories: list, evidences: list, client=None) -> list:

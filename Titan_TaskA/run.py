@@ -207,13 +207,29 @@ def run_pipeline(input_dir: str, output_path: str, k: int = 5):
     # --- Step 5: Write output ---
     print(f"\n💾 Step 5: Writing results to {output_path}...")
     
+    # VALIDATION: Ensure strict schema
+    required_columns = {"StoryID", "Prediction", "Rationale"}
+    
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=["StoryID", "Prediction", "Rationale"])
         writer.writeheader()
         for row in results:
-            writer.writerow(row)
+            # Filter just the required keys to be safe
+            safe_row = {k: row[k] for k in required_columns if k in row}
+            # Ensure Prediction is 0 or 1
+            if str(safe_row["Prediction"]) not in ["0", "1"]:
+                print(f"⚠️  Warning: Invalid prediction '{safe_row['Prediction']}' for StoryID {safe_row.get('StoryID')}. Defaulting to 0.")
+                safe_row["Prediction"] = 0
+            writer.writerow(safe_row)
     
-    print(f"\n✅ Success! Results written to {output_path}")
+    # Double-check readability
+    try:
+        df_verify = pd.read_csv(output_path)
+        assert set(df_verify.columns) == required_columns, f"Output columns mismatch! Found {df_verify.columns}"
+        print("   ✅ Validated output schema: StoryID, Prediction, Rationale")
+    except Exception as e:
+        print(f"   ❌ Validation Failed: {e}")
+
     print(f"   Total: {len(results)} predictions")
     print(f"   Consistent: {sum(1 for r in results if r['Prediction'] == 1)}")
     print(f"   Inconsistent: {sum(1 for r in results if r['Prediction'] == 0)}")
