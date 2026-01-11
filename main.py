@@ -178,8 +178,8 @@ Evidence from Novel:
         final_df['prediction'] = final_df['prediction'].fillna('1')
         final_df['rationale'] = final_df['rationale'].fillna('')
     
-    final_df = final_df.rename(columns={'story_id': 'Story ID', 'prediction': 'Prediction', 'rationale': 'Rationale'})
-    final_df = final_df[['Story ID', 'Prediction', 'Rationale']]
+    final_df = final_df.rename(columns={'story_id': 'StoryID', 'prediction': 'Prediction', 'rationale': 'Rationale'})
+    final_df = final_df[['StoryID', 'Prediction', 'Rationale']]
     
     output_path = f"{DATA_DIR}submission_final.csv"
     final_df.to_csv(output_path, index=False, quoting=csv.QUOTE_ALL)

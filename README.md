@@ -74,14 +74,19 @@ hackathon_project/
 
 ### Running the Pipeline
 
+**Local Runner (Recommended for judges):**
+```bash
+python run.py --input data/ --output results.csv
+```
+
+**Modal Cloud Runner (Optional):**
 ```bash
 modal run main.py
 ```
 
 This will:
-- Deploy the pipeline to Modal's cloud infrastructure
 - Process all novels and test backstories
-- Generate `submission_final.csv` locally
+- Generate `results.csv` with predictions
 
 ## 📊 Output Format
 
@@ -89,7 +94,7 @@ The output CSV contains:
 
 | Column | Description |
 |--------|-------------|
-| `Story ID` | Unique identifier for the backstory |
+| `StoryID` | Unique identifier for the backstory |
 | `Prediction` | `0` (contradiction) or `1` (consistent) |
 | `Rationale` | Brief explanation from Claude |
 

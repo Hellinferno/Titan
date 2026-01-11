@@ -1,0 +1,61 @@
+StoryID,Prediction,Rationale
+95,1,API error: Error code: 401 - {'error': {'message': 'User not 
+136,1,API error: Error code: 401 - {'error': {'message': 'User not 
+59,1,API error: Error code: 401 - {'error': {'message': 'User not 
+60,1,API error: Error code: 401 - {'error': {'message': 'User not 
+124,1,Causal issues: Name mismatch: 'Marseille' vs 'Marseilles'. API error: Error code: 401 - {'error': {'message': 'User not 
+111,1,API error: Error code: 401 - {'error': {'message': 'User not 
+135,1,API error: Error code: 401 - {'error': {'message': 'User not 
+27,1,API error: Error code: 401 - {'error': {'message': 'User not 
+110,1,API error: Error code: 401 - {'error': {'message': 'User not 
+42,1,Causal issues: Name mismatch: 'Britannia' vs 'British'; Name mismatch: 'British' vs 'Britannia'. API error: Error code: 401 - {'error': {'message': 'User not 
+56,1,API error: Error code: 401 - {'error': {'message': 'User not 
+80,1,Causal issues: Name mismatch: 'Champion' vs 'Chapter'. API error: Error code: 401 - {'error': {'message': 'User not 
+28,1,API error: Error code: 401 - {'error': {'message': 'User not 
+101,1,API error: Error code: 401 - {'error': {'message': 'User not 
+91,1,Causal issues: Name mismatch: 'Justice' vs 'Jussienne'. API error: Error code: 401 - {'error': {'message': 'User not 
+24,1,Causal issues: Name mismatch: 'Brittany' vs 'British'; Name mismatch: 'Brittany' vs 'Britannia'. API error: Error code: 401 - {'error': {'message': 'User not 
+119,1,API error: Error code: 401 - {'error': {'message': 'User not 
+93,1,Causal issues: Name mismatch: 'Marseille' vs 'Marseilles'. API error: Error code: 401 - {'error': {'message': 'User not 
+72,1,API error: Error code: 401 - {'error': {'message': 'User not 
+16,1,Causal issues: Name mismatch: 'British' vs 'Britannia'. API error: Error code: 401 - {'error': {'message': 'User not 
+30,1,API error: Error code: 401 - {'error': {'message': 'User not 
+97,1,API error: Error code: 401 - {'error': {'message': 'User not 
+22,1,Causal issues: Name mismatch: 'American' vs 'America'. API error: Error code: 401 - {'error': {'message': 'User not 
+53,1,Causal issues: Name mismatch: 'Thaouka' vs 'Thalcave'. API error: Error code: 401 - {'error': {'message': 'User not 
+58,1,Causal issues: Name mismatch: 'French' vs 'Frenchman'. API error: Error code: 401 - {'error': {'message': 'User not 
+81,1,API error: Error code: 401 - {'error': {'message': 'User not 
+47,1,API error: Error code: 401 - {'error': {'message': 'User not 
+7,1,API error: Error code: 401 - {'error': {'message': 'User not 
+121,1,API error: Error code: 401 - {'error': {'message': 'User not 
+129,1,API error: Error code: 401 - {'error': {'message': 'User not 
+51,1,Causal issues: Name mismatch: 'Thalcave' vs 'Thaouka'. API error: Error code: 401 - {'error': {'message': 'User not 
+127,1,API error: Error code: 401 - {'error': {'message': 'User not 
+133,1,API error: Error code: 401 - {'error': {'message': 'User not 
+52,1,Causal issues: Name mismatch: 'Thaouka' vs 'Thalcave'. API error: Error code: 401 - {'error': {'message': 'User not 
+114,1,API error: Error code: 401 - {'error': {'message': 'User not 
+2,1,Causal issues: Name mismatch: 'Spanish' vs 'Spain'. API error: Error code: 401 - {'error': {'message': 'User not 
+33,1,Causal issues: Name mismatch: 'Scottish' vs 'Scotland'. API error: Error code: 401 - {'error': {'message': 'User not 
+15,1,API error: Error code: 401 - {'error': {'message': 'User not 
+82,1,Causal issues: Name mismatch: 'Captured' vs 'Captain'. API error: Error code: 401 - {'error': {'message': 'User not 
+37,1,API error: Error code: 401 - {'error': {'message': 'User not 
+3,1,API error: Error code: 401 - {'error': {'message': 'User not 
+103,1,API error: Error code: 401 - {'error': {'message': 'User not 
+94,1,API error: Error code: 401 - {'error': {'message': 'User not 
+85,1,API error: Error code: 401 - {'error': {'message': 'User not 
+21,1,Causal issues: Name mismatch: 'Austin' vs 'Australia'; Name mismatch: 'Australia' vs 'Austin'. API error: Error code: 401 - {'error': {'message': 'User not 
+49,1,Causal issues: Name mismatch: 'Andean' vs 'Andes'. API error: Error code: 401 - {'error': {'message': 'User not 
+140,1,API error: Error code: 401 - {'error': {'message': 'User not 
+64,1,API error: Error code: 401 - {'error': {'message': 'User not 
+131,1,Causal issues: Temporal gap: backstory (1760) vs evidence (1817); Name mismatch: 'Italian' vs 'Italy'. API error: Error code: 401 - {'error': {'message': 'User not 
+61,1,API error: Error code: 401 - {'error': {'message': 'User not 
+86,1,API error: Error code: 401 - {'error': {'message': 'User not 
+38,1,API error: Error code: 401 - {'error': {'message': 'User not 
+132,1,API error: Error code: 401 - {'error': {'message': 'User not 
+77,1,Causal issues: Name mismatch: 'British' vs 'Britannia'. API error: Error code: 401 - {'error': {'message': 'User not 
+70,1,API error: Error code: 401 - {'error': {'message': 'User not 
+115,1,Causal issues: Name mismatch: 'Indian' vs 'Indeed'; Name mismatch: 'Jesuit' vs 'Jesuits'. API error: Error code: 401 - {'error': {'message': 'User not 
+78,1,API error: Error code: 401 - {'error': {'message': 'User not 
+87,1,API error: Error code: 401 - {'error': {'message': 'User not 
+75,1,API error: Error code: 401 - {'error': {'message': 'User not 
+44,1,API error: Error code: 401 - {'error': {'message': 'User not 
