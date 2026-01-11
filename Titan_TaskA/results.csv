@@ -1,0 +1,61 @@
+StoryID,Prediction,Rationale
+95,1,"The backstory suggests Noirtier took actions against Villefort by giving sensitive information to British intelligence, which while not directly confirmed in the provided evidence, is not contradicted either. The evidence shows: 1) There was division between family members, 2) Monte Cristo had access to information about Villefort's past, 3) Villefort is described as a former royal attorney who was considered upright but called a 'villain' by Bertuccio, and 4) The Count had connections to British figures (Lord Wilmore). While we cannot definitively confirm the specific claim about the dossier, the general characterization of family tension and Villefort's questionable nature is consistent with the evidence."
+136,0,Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+59,1,JSON parse error: Expecting value: line 1 column 1 (char 0)
+60,0,Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+124,1,Causal issues: Name mismatch: 'Marseille' vs 'Marseilles'. JSON parse error: Expecting value: line 1 column 1 (char 0)
+111,1,API error: Error code: 403 - {'error': {'message': 'anthropic
+135,0,Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+27,1,JSON parse error: Expecting value: line 1 column 1 (char 0)
+110,1,JSON parse error: Extra data: line 8 column 1 (char 634)
+42,0,Causal issues: Name mismatch: 'Britannia' vs 'British'; Name mismatch: 'British' vs 'Britannia'. Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+56,0,"Contradictions: The backstory mentions predicting an earthquake and saving a party, but the evidence contains no mention of earthquakes or such an event; The evidence appears to be about financial dealings, credit issues, and business transactions, completely unrelated to the backstory's claims. The backstory describes a supernatural/heroic event involving earthquake prediction, while the evidence exclusively discusses business matters, financial troubles, and credit issues between various parties including Morrel, Danglars, and others. There is no connection or overlap between the two narratives, making them incompatible contexts."
+80,1,Causal issues: Name mismatch: 'Champion' vs 'Chapter'. JSON parse error: Expecting value: line 1 column 1 (char 0)
+28,0,Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+101,1,"The backstory claiming the character joined a radical republican cell at 18 is CONSISTENT with the evidence. The evidence shows Noirtier was a fierce Jacobin (radical republican) during the French Revolution, described as 'one of the most fiery Jacobins' who was involved in revolutionary activities, including being 'hunted by Robespierre's bloodhounds' and 'playing with revolutions.' While the evidence doesn't specify his exact age when joining, it doesn't contradict the claim of joining at 18, and the revolutionary activities described align with the backstory's mention of radical republican involvement."
+91,1,Causal issues: Name mismatch: 'Justice' vs 'Jussienne'. JSON parse error: Expecting value: line 1 column 1 (char 0)
+24,0,Causal issues: Name mismatch: 'Brittany' vs 'British'; Name mismatch: 'Brittany' vs 'Britannia'. Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+119,0,"Contradictions: The backstory claims imprisonment in Fenestrella Fortress, but evidence shows imprisonment in Château d'If; The backstory mentions scratching an essay about Mediterranean routes in limestone, but evidence shows Faria writing a treatise about Italian monarchy; No evidence of any warden plagiarizing works. The evidence clearly places the imprisonment at Château d'If, not Fenestrella Fortress. The prisoner's writing was about Italian monarchy, not Mediterranean routes. The evidence discusses writing materials made by prisoners but nothing about limestone scratching or plagiarism by wardens. The locations and details are directly contradictory to the backstory."
+93,0,"Causal issues: Name mismatch: 'Marseille' vs 'Marseilles'. Contradictions: The backstory claims letters were hidden in oak barrels in a vineyard, but evidence shows a single 'fatal letter' being delivered directly by Dantès; Evidence indicates the letter was addressed to M. Noirtier at Rue Coq-Héron, not found in vineyard barrels. The evidence describes a single compromising letter carried by Dantès and intercepted by Villefort, directly contradicting the backstory's claim of multiple ciphered letters hidden in vineyard barrels. The delivery method and discovery circumstances are fundamentally different between backstory and evidence."
+72,0,Parse error but detected inconsistency: Expecting value: line 1 column 1 (char 0)
+16,1,Causal issues: Name mismatch: 'British' vs 'Britannia'. JSON parse error: Expecting value: line 1 column 1 (char 0)
+30,1,JSON parse error: Expecting value: line 1 column 1 (char 0)
+97,1,"The backstory claim about poison mastery is well-supported by the evidence. The text shows detailed knowledge of poisons through multiple incidents: 1) Recognition of Barrois' poisoning symptoms, 2) Knowledge of brucine dosing for Noirtier's paralysis treatment, 3) Understanding of how poisons can become remedies in certain doses, and 4) Awareness of poison resistance through gradual exposure. The evidence confirms Barrois was indeed poisoned and shows deep understanding of the poisoning mechanisms at play."
+22,1,Causal issues: Name mismatch: 'American' vs 'America'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+53,1,Causal issues: Name mismatch: 'Thaouka' vs 'Thalcave'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+58,1,Causal issues: Name mismatch: 'French' vs 'Frenchman'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+81,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+47,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+7,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+121,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+129,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+51,1,Causal issues: Name mismatch: 'Thalcave' vs 'Thaouka'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+127,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+133,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+52,1,Causal issues: Name mismatch: 'Thaouka' vs 'Thalcave'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+114,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+2,1,Causal issues: Name mismatch: 'Spanish' vs 'Spain'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+33,1,Causal issues: Name mismatch: 'Scottish' vs 'Scotland'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+15,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+82,1,Causal issues: Name mismatch: 'Captured' vs 'Captain'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+37,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+3,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+103,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+94,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+85,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+21,1,Causal issues: Name mismatch: 'Austin' vs 'Australia'; Name mismatch: 'Australia' vs 'Austin'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+49,1,Causal issues: Name mismatch: 'Andean' vs 'Andes'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+140,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+64,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+131,1,Causal issues: Temporal gap: backstory (1760) vs evidence (1817); Name mismatch: 'Italian' vs 'Italy'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+61,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+86,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+38,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+132,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+77,1,Causal issues: Name mismatch: 'British' vs 'Britannia'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+70,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+115,1,Causal issues: Name mismatch: 'Indian' vs 'Indeed'; Name mismatch: 'Jesuit' vs 'Jesuits'. API error: Error code: 402 - {'error': {'message': 'Insuffici
+78,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+87,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+75,1,API error: Error code: 402 - {'error': {'message': 'Insuffici
+44,1,API error: Error code: 402 - {'error': {'message': 'Insuffici

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+results_ollama.csv
+results_gemma.csv
+.env
+.ipynb_checkpoints/
