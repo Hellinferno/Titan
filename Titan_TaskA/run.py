@@ -217,10 +217,17 @@ def run_pipeline(input_dir: str, output_path: str, k: int = 5):
             # Filter just the required keys to be safe
             safe_row = {k: row[k] for k in required_columns if k in row}
             # Ensure Prediction is 0 or 1
+            # Ensure Prediction is 0 or 1
             if str(safe_row["Prediction"]) not in ["0", "1"]:
                 print(f"⚠️  Warning: Invalid prediction '{safe_row['Prediction']}' for StoryID {safe_row.get('StoryID')}. Defaulting to 0.")
                 safe_row["Prediction"] = 0
+            
+            # Sanitize Rationale (remove newlines for strict CSV format)
+            if "Rationale" in safe_row:
+                safe_row["Rationale"] = str(safe_row["Rationale"]).replace("\n", " ").replace("\r", " ").strip()
+                
             writer.writerow(safe_row)
+
     
     # Double-check readability
     try:
