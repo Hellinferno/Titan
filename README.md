@@ -60,9 +60,16 @@ hackathon_project/
    modal setup
    ```
 
-3. **Set your API key** in `main.py`:
-   ```python
-   OPENROUTER_API_KEY = "your-openrouter-api-key"
+3. **Set your API key** (environment variable):
+   
+   **PowerShell:**
+   ```powershell
+   $env:OPENROUTER_API_KEY = "your-api-key"
+   ```
+   
+   **Linux/Mac:**
+   ```bash
+   export OPENROUTER_API_KEY="your-api-key"
    ```
 
 ### Running the Pipeline
@@ -92,23 +99,27 @@ Key parameters in `main.py`:
 
 ```python
 APP_NAME = "track-a-pathway-claude"  # Modal app name
-OPENROUTER_API_KEY = "..."           # Your API key
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")  # Environment variable
 DATA_DIR = "/root/data/"             # Data directory in cloud
 ```
 
 ## 🧠 AI Prompt Design
 
-The AI judge uses a carefully crafted prompt:
+The AI judge uses a **Chain of Thought** prompt for comprehensive analysis:
+1. **IDENTIFY**: Specific details in evidence relating to the backstory
+2. **COMPARE**: Check for logical contradictions
+3. **DECIDE**: Determine consistency
+
 - Returns `0` if backstory **contradicts** novel evidence
 - Returns `1` if backstory is **supported by** or **silent** in the evidence
-- Provides a one-sentence rationale for each decision
+- Provides comprehensive evidence rationale for each decision
 
 ## 📈 Performance
 
 - **Model**: Claude 3.5 Sonnet (via OpenRouter)
 - **Embedding**: all-MiniLM-L6-v2 (384 dimensions)
 - **Chunk Size**: 1000 characters
-- **K-Nearest Neighbors**: k=1 for retrieval
+- **K-Nearest Neighbors**: k=5 for wider context retrieval
 
 ## 🤝 Contributing
 

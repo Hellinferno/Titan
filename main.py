@@ -3,7 +3,7 @@ import os
 
 # --- CONFIGURATION ---
 APP_NAME = "track-a-pathway-claude"
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
 
 # Define the Cloud Environment
 image = (
@@ -49,20 +49,28 @@ def run_pipeline():
         api_key=OPENROUTER_API_KEY,
     )
 
-    # Define the Judge Function
+    # Define the Judge Function with Chain of Thought reasoning
     @pw.udf
     def ai_judge(backstory: str, evidence_text: str) -> str:
-        prompt = f"""You are a literary consistency checker.
+        prompt = f"""You are a literary consistency checker analyzing character backstories against novel evidence.
+
 Task: Determine if the 'Backstory' is consistent with the 'Evidence' from the novel.
 
-Rules:
-- If the Backstory contradicts the Evidence, return 0.
-- If the Backstory is supported by OR fits within the Evidence (silent), return 1.
+Analyze the retrieved evidence carefully using these steps:
+1. IDENTIFY: First, identify any specific details in the evidence that relate to the backstory (names, events, relationships, timelines, locations).
+2. COMPARE: Then, check for logical contradictions between the backstory claims and the evidence details.
+3. DECIDE: Finally, determine if the backstory is consistent or contradictory.
 
-Return ONLY JSON: {{"prediction": 0 or 1, "rationale": "One short sentence explaining why."}}
+Rules:
+- Return 0 if the Backstory DIRECTLY CONTRADICTS specific facts in the Evidence.
+- Return 1 if the Backstory is SUPPORTED BY or FITS WITHIN the Evidence (including cases where evidence is silent on the backstory claims).
+
+Return ONLY JSON: {{"prediction": 0 or 1, "rationale": "Comprehensive evidence rationale explaining your step-by-step analysis."}}
 
 Backstory: {backstory}
-Evidence: {evidence_text}"""
+
+Evidence from Novel:
+{evidence_text}"""
         
         try:
             time.sleep(0.5)  # Rate limit pause
@@ -124,16 +132,35 @@ Evidence: {evidence_text}"""
         query_vector=embedder(pw.this.backstory)
     )
 
-    # --- Step D: Retrieve & Decide ---
-    knn_results = index.get_nearest_items(questions.query_vector, k=1)
+    # --- Step D: Retrieve & Decide (k=5 for wider context) ---
+    knn_results = index.get_nearest_items(questions.query_vector, k=5)
     
+    # Join questions with KNN results - this may result in multiple rows per query
     matches = questions.join(knn_results, pw.this.id == knn_results.id).select(
         story_id=pw.this.story_id,
         backstory=pw.this.backstory,
         evidence=knn_results.text
     )
 
-    results = matches.select(
+    # Aggregate multiple evidence chunks per story_id by concatenating them
+    @pw.udf
+    def concat_with_separator(texts: list) -> str:
+        return "\n\n---EVIDENCE CHUNK---\n\n".join(texts)
+
+    aggregated_matches = matches.groupby(pw.this.story_id, pw.this.backstory).reduce(
+        story_id=pw.reducers.any(pw.this.story_id),
+        backstory=pw.reducers.any(pw.this.backstory),
+        evidence_list=pw.reducers.tuple(pw.this.evidence)
+    )
+
+    # Convert tuple to concatenated string
+    aggregated_matches = aggregated_matches.select(
+        story_id=pw.this.story_id,
+        backstory=pw.this.backstory,
+        evidence=pw.apply(lambda x: "\n\n---EVIDENCE CHUNK---\n\n".join(x), pw.this.evidence_list)
+    )
+
+    results = aggregated_matches.select(
         story_id=pw.this.story_id,
         combined_result=ai_judge(pw.this.backstory, pw.this.evidence)
     )
